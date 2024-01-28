@@ -1,0 +1,15 @@
+import socket
+
+def scan_ports(host, ports_to_scan):
+    print(f"Scanning {host}")
+    for port in ports_to_scan:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(1)
+        result = s.connect_ex((host, port))
+        if result == 0:
+            print(f"Port {port}: OPEN")
+        s.close()
+
+host = "example.com"
+ports_to_scan = range(20, 1024)
+scan_ports(host, ports_to_scan)
