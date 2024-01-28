@@ -1,3 +1,5 @@
+## Simple *loud* TCP Scanner
+
 import socket
 
 def scan_ports(host, ports_to_scan):
@@ -13,3 +15,28 @@ def scan_ports(host, ports_to_scan):
 host = "example.com"
 ports_to_scan = range(20, 1024)
 scan_ports(host, ports_to_scan)
+
+## Simple *Quiet* UDP Scanner 
+
+import socket
+
+def scan_udp_ports(host, ports_to_scan):
+    print(f"Scanning {host} with UDP")
+    for port in ports_to_scan:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.settimeout(1)
+        try:
+            # Send a dummy packet since UDP is connectionless
+            s.sendto(b'', (host, port))
+            data, _ = s.recvfrom(1024)
+            print(f"Port {port}: OPEN or FILTERED (received data)")
+        except socket.timeout:
+            print(f"Port {port}: OPEN or FILTERED (no response)")
+        except Exception as e:
+            print(f"Port {port}: CLOSED or FILTERED ({e})")
+        finally:
+            s.close()
+
+host = "example.com"
+ports_to_scan = range(20, 1024)
+scan_udp_ports(host, ports_to_scan)
